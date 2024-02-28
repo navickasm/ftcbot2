@@ -1,10 +1,10 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-    config: {
-        name: 'ping',
-        description: 'Get ping of the bot',
-        usage: `!ping`,
-    },
-    async run (bot,message,args) {
+    data: new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('Get ping of the bot'),
+    async execute(bot,message,args) {
         message.channel.send("My ping is \`" + bot.ws.ping + " ms\`");
     }
 }

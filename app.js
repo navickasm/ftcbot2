@@ -1,4 +1,9 @@
-const { prefix, token } = require("./config.json");
+const { prefix } = require("./config.json");
+const { token } = require("./secrets.json");
+const express = require('express');
+const { createServer } = require('node:http');
+const { join } = require('node:path');
+const { Server } = require('socket.io');
 
 const { Client, Intents, Collection } = require('discord.js');
 const bot = new Client({ 
@@ -17,7 +22,7 @@ const commandFiles = fs.readdirSync('./commands/').filter(f => f.endsWith('.js')
 for (const file of commandFiles) {
     const props = require(`./commands/${file}`)
     console.log(`${file} loaded`)
-    bot.commands.set(props.config.name, props)
+    bot.commands.set(props.data.name, props)
 }
 
 const commandSubFolders = fs.readdirSync('./commands/').filter(f => !f.endsWith('.js'))
@@ -63,5 +68,29 @@ bot.on("messageCreate", async message => {
 
 });
 
-//Token needed in config.json
 bot.login(token);
+
+const app = express();
+const server = createServer(app);
+
+const io = new Server(server);
+
+app.get('/', (req, res) => {
+  res.sendFile(join(__dirname, 'index.html'));
+});
+
+io.on('connection', (socket) => {
+    console.log('a user connected');
+
+    socket.on('ping', (msg) => {
+        switch(msg) {
+            case "bo":
+                socket.emit('pong', "pong")
+                break;
+        }
+    });
+});
+
+server.listen(3000, () => {
+  console.log('server running at http://localhost:3000');
+});
