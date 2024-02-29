@@ -1,4 +1,4 @@
-const { prefix } = require("./config.json");
+const { prefix, website } = require("./config.json");
 const { token } = require("./secrets.json");
 const express = require('express');
 const { createServer } = require('node:http');
@@ -48,27 +48,19 @@ for (const file of eventFiles) {
     }
 }
 
-//Command Manager
 bot.on("messageCreate", async message => {
-    //Check if author is a bot or the message was sent in dms and return
     if(message.author.bot) return;
     if(message.channel.type === "dm") return;
 
-    //get prefix from config and prepare message so it can be read as a command
     let messageArray = message.content.split(" ");
     let cmd = messageArray[0];
     let args = messageArray.slice(1);
 
-    //Check for prefix
-    if(!cmd.startsWith(prefix)) return;
+    if (!cmd.startsWith(prefix)) return;
 
-    //Get the command from the commands collection and then if the command is found run the command file
     let commandfile = bot.commands.get(cmd.slice(prefix.length));
-    if(commandfile) commandfile.run(bot,message,args);
-
+    if (commandfile) commandfile.execute(bot,message,args);
 });
-
-bot.login(token);
 
 const app = express();
 const server = createServer(app);
@@ -83,14 +75,12 @@ io.on('connection', (socket) => {
     console.log('a user connected');
 
     socket.on('ping', (msg) => {
-        switch(msg) {
-            case "bo":
-                socket.emit('pong', "pong")
-                break;
-        }
+        bot.channels.cache.get(website.channel).send(`<@&${website[msg]}> A User has requested your presence in the pit`);
     });
 });
 
 server.listen(3000, () => {
   console.log('server running at http://localhost:3000');
 });
+
+bot.login(token);

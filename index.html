@@ -1,41 +1,85 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ping Portal</title>
     <style>
-      body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        /* General Styles */
+        body {
+            margin: 0;
+            padding-bottom: 3rem;
+            font-family: "Arial", sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+        }
 
-      #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
-      #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
-      #input:focus { outline: none; }
-      #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+        /* Main Content Styles */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages > li { padding: 0.5rem 1rem; }
-      #messages > li:nth-child(odd) { background: #efefef; }
+        .button-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        button {
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-family: "Arial", sans-serif;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        button:hover {
+            filter: brightness(90%);
+        }
+
+        button.outreach { background-color: #e74c3c; color: #fff; }
+        button.build { background-color: #f1c40f; color: #000; }
+        button.code { background-color: #2ecc71; color: #000; }
+        button.cad { background-color: #9b59b6; color: #fff; }
+        button.drive { background-color: #e67e22; color: #fff; }
+        button.captains { background-color: #3498db; color: #fff; }
+        button.everyone { background-color: #b0c0bd; color: #000; }
     </style>
-  </head>
-  <body>
-    <ul id="messages"></ul>
+</head>
+<body>
+    <div class="container">
+        <div class="button-container">
+            <button class="build" onclick="pingButtonClick('build')">Build</button>
+            <button class="outreach" onclick="pingButtonClick('outreach')">Outreach</button>
+            <button class="code" onclick="pingButtonClick('code')">Code</button>
+            <button class="cad" onclick="pingButtonClick('cad')">Cad</button>
+        </div>
+
+        <div class="button-container">
+            <button class="drive" onclick="pingButtonClick('drive')">Drive</button>
+            <button class="captains" onclick="pingButtonClick('captain')">Captains</button>
+            <button class="everyone" onclick="pingButtonClick('everyone')">Everyone</button>
+        </div>
+    </div>
     
-    <button id="bo" onclick="pingButtonClick('bo')">Outreach</button>
-    <button id="bb" onclick="pingButtonClick('bb')">Build</button>
-    <button id="bc" onclick="pingButtonClick('bc')">Code</button>
-    <button id="bd" onclick="pingButtonClick('bd')">Cad</button>
-    <button id="be" onclick="pingButtonClick('be')">Everyone</button>
+    <iframe src="https://docs.google.com/presentation/d/e/2PACX-1vSPT5GMX1U1k0b-ZN3Kv4O2iydpJ3iksOlSivS9hAqBa0iKav47AhiX35DiMQdNxHcD6UtqBDri0JQL/embed?start=true&amp;loop=true&amp;delayms=3000"
+        frameborder="0" width="580" height="362" display="block" allowfullscreen="true"
+        mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
-    
-        const form = document.getElementById('form');
-        const input = document.getElementById('input');
-    
+
         function pingButtonClick(buttonId) {
             socket.emit('ping', buttonId);
         }
     </script>
-
-  </body>
+</body>
 </html>
